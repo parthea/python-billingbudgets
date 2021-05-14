@@ -25,6 +25,12 @@ common = gcp.CommonTemplates()
 default_version = "v1"
 
 for library in s.get_staging_dirs(default_version):
+    # Temporary patch for python generator version 0.46.1, which has a bug
+    s.replace(library / "google/cloud/**/*.py",
+        "from google.api_core import exceptions as core_exceptions  # type: ignore",
+        "from google.api_core import exceptions  # type: ignore"
+    )
+
     excludes = [
         "nox.py",
         "setup.py",
